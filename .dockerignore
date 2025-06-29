@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+*.log
+.DS_Store
+.env
+.idea/
+.vscode/
+.git/
+.gitignore
+run.bat
+run_image_descriptor.bat 
