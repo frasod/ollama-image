@@ -362,13 +362,15 @@ class ImageToPromptApp(QMainWindow):
         info_layout.setSpacing(4)
 
         # Ollama loaded models info (bold title)
-        self.ollama_models_label = QLabel("")
+        self.ollama_models_label = QLabel("<b>Ollama Loaded Models:</b> <i>Loading...</i>")
         self.ollama_models_label.setTextFormat(Qt.TextFormat.RichText)
+        self.ollama_models_label.setMinimumHeight(24)
         info_layout.addWidget(self.ollama_models_label)
 
         # GPU Info Section (bold title)
-        self.gpu_info_label = QLabel("")
+        self.gpu_info_label = QLabel("<b>GPU Info:</b> <i>Loading...</i>")
         self.gpu_info_label.setTextFormat(Qt.TextFormat.RichText)
+        self.gpu_info_label.setMinimumHeight(24)
         info_layout.addWidget(self.gpu_info_label)
 
         # Refresh button
@@ -502,7 +504,7 @@ class ImageToPromptApp(QMainWindow):
         try:
             gpus = GPUtil.getGPUs()
             if not gpus:
-                gpu_info_html = "<b>GPU Info:</b> No GPU detected."
+                gpu_info_html = "<b>GPU Info:</b> <i>No GPU detected.</i>"
             else:
                 info_lines = ["<b>GPU Info:</b>"]
                 for gpu in gpus:
@@ -515,7 +517,8 @@ class ImageToPromptApp(QMainWindow):
                 gpu_info_html = "<div style='line-height:1.5;'>" + "".join(info_lines) + "</div>"
             self.gpu_info_label.setText(gpu_info_html)
         except Exception as e:
-            self.gpu_info_label.setText(f"<b>GPU Info:</b> Error: {e}")
+            self.gpu_info_label.setText(f"<b>GPU Info:</b> <span style='color:#b00;'><i>Error: {e}</i></span>")
+            print(f"[ERROR] GPU Info: {e}")
         # Update Ollama loaded models info
         try:
             response = requests.get("http://localhost:11434/api/tags", timeout=2)
@@ -525,11 +528,12 @@ class ImageToPromptApp(QMainWindow):
                     model_names = [model.get("name", "") for model in models]
                     self.ollama_models_label.setText("<b>Ollama Loaded Models:</b> " + ", ".join(model_names))
                 else:
-                    self.ollama_models_label.setText("<b>Ollama Loaded Models:</b> None detected.")
+                    self.ollama_models_label.setText("<b>Ollama Loaded Models:</b> <i>None detected.</i>")
             else:
-                self.ollama_models_label.setText(f"<b>Ollama Loaded Models:</b> Error: {response.status_code}")
+                self.ollama_models_label.setText(f"<b>Ollama Loaded Models:</b> <span style='color:#b00;'><i>Error: {response.status_code}</i></span>")
         except Exception as e:
-            self.ollama_models_label.setText(f"<b>Ollama Loaded Models:</b> Error: {e}")
+            self.ollama_models_label.setText(f"<b>Ollama Loaded Models:</b> <span style='color:#b00;'><i>Error: {e}</i></span>")
+            print(f"[ERROR] Ollama Models: {e}")
 
     def populate_model_combo(self):
         try:
