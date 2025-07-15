@@ -1,7 +1,8 @@
+import os
 import requests
 from typing import Tuple, List, Union
 
-OLLAMA_BASE_URL = "http://localhost:11434"
+OLLAMA_BASE_URL = os.environ.get("OLLAMA_BASE_URL", "http://localhost:11434")
 
 def check_ollama() -> Tuple[bool, Union[str, List[str]]]:
     """Check if Ollama is running and return available model names.
